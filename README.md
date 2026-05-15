@@ -51,7 +51,7 @@ Projet réalisé avec Node.js, Express et MongoDB.
 ### Cloner le projet
 
 ```bash
-git clone <LIEN_GITHUB>
+git clone https://github.com/Opokup/API-Russell.git
 ```
 
 ### Installer les dépendances
