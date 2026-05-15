@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - API Russell</title>
+</head>
+
+<body>
+
+  <h1>Tableau de bord</h1>
+
+  <p>
+    Bienvenue sur l'interface de gestion du port de Russell.
+  </p>
+
+  <hr>
+
+  <h2>Navigation</h2>
+
+  <ul>
+
+    <li>
+      <a href="/catways.html">
+        Gestion des catways
+      </a>
+    </li>
+
+    <li>
+      <a href="/reservations.html">
+        Gestion des réservations
+      </a>
+    </li>
+
+    <li>
+      <a href="/users.html">
+        Gestion des utilisateurs
+      </a>
+    </li>
+
+    <li>
+      <a
+        href="https://github.com/"
+        target="_blank"
+      >
+        Documentation API
+      </a>
+    </li>
+
+  </ul>
+
+  <hr>
+
+  <h2>Informations utilisateur</h2>
+
+  <p id="userInfo">
+    Utilisateur connecté
+  </p>
+
+  <p id="date"></p>
+
+  <hr>
+
+  <h2>Réservations en cours</h2>
+
+  <table border="1">
+
+    <thead>
+      <tr>
+        <th>Client</th>
+        <th>Bateau</th>
+        <th>Début</th>
+        <th>Fin</th>
+      </tr>
+    </thead>
+
+    <tbody id="reservationsTable">
+    </tbody>
+
+  </table>
+
+  <br>
+
+  <button id="logout">
+    Se déconnecter
+  </button>
+
+  <script>
+
+    // Date du jour
+    const today = new Date();
+
+    document.getElementById("date").innerText =
+      "Date : " + today.toLocaleDateString();
+
+    // Logout
+    document
+      .getElementById("logout")
+      .addEventListener("click", async () => {
+
+        await fetch("/auth/logout");
+
+        window.location.href = "/";
+      });
+
+    // Charger réservations
+    async function loadReservations() {
+
+      try {
+
+        const response = await fetch(
+          "/catways/1/reservations"
+        );
+
+        const reservations = await response.json();
+
+        const table =
+          document.getElementById("reservationsTable");
+
+        reservations.forEach((reservation) => {
+
+          table.innerHTML += `
+            <tr>
+              <td>${reservation.clientName}</td>
+              <td>${reservation.boatName}</td>
+              <td>${new Date(reservation.startDate).toLocaleDateString()}</td>
+              <td>${new Date(reservation.endDate).toLocaleDateString()}</td>
+            </tr>
+          `;
+        });
+
+      } catch (error) {
+
+        console.log(error);
+      }
+    }
+
+    loadReservations();
+
+  </script>
+
+</body>
+</html>

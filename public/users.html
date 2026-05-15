@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Gestion Utilisateurs</title>
+</head>
+
+<body>
+
+  <h1>Gestion des Utilisateurs</h1>
+
+  <a href="/dashboard.html">
+    Retour dashboard
+  </a>
+
+  <hr>
+
+  <h2>Créer un utilisateur</h2>
+
+  <form id="userForm">
+
+    <input
+      type="text"
+      id="username"
+      placeholder="Nom utilisateur"
+      required
+    >
+
+    <br><br>
+
+    <input
+      type="email"
+      id="email"
+      placeholder="Email"
+      required
+    >
+
+    <br><br>
+
+    <input
+      type="password"
+      id="password"
+      placeholder="Mot de passe"
+      required
+    >
+
+    <br><br>
+
+    <button type="submit">
+      Ajouter
+    </button>
+
+  </form>
+
+  <hr>
+
+  <h2>Liste des utilisateurs</h2>
+
+  <ul id="userList"></ul>
+
+  <script>
+
+    async function loadUsers() {
+
+      const response =
+        await fetch("/users");
+
+      const users =
+        await response.json();
+
+      const list =
+        document.getElementById("userList");
+
+      list.innerHTML = "";
+
+      users.forEach((user) => {
+
+        list.innerHTML += `
+          <li>
+            ${user.username}
+            -
+            ${user.email}
+          </li>
+        `;
+      });
+    }
+
+    document
+      .getElementById("userForm")
+      .addEventListener("submit", async (e) => {
+
+        e.preventDefault();
+
+        const username =
+          document.getElementById("username").value;
+
+        const email =
+          document.getElementById("email").value;
+
+        const password =
+          document.getElementById("password").value;
+
+        await fetch("/users", {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            username,
+            email,
+            password
+          })
+        });
+
+        loadUsers();
+      });
+
+    loadUsers();
+
+  </script>
+
+</body>
+</html>

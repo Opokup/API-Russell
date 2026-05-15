@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>API Port Russell</title>
+</head>
+
+<body>
+
+  <h1>API Port de Russell</h1>
+
+  <p>
+    Application de gestion des catways et réservations.
+  </p>
+
+  <hr>
+
+  <h2>Connexion</h2>
+
+  <form id="loginForm">
+
+    <label>Email</label>
+    <br>
+
+    <input
+      type="email"
+      id="email"
+      required
+    >
+
+    <br><br>
+
+    <label>Mot de passe</label>
+    <br>
+
+    <input
+      type="password"
+      id="password"
+      required
+    >
+
+    <br><br>
+
+    <button type="submit">
+      Se connecter
+    </button>
+
+  </form>
+
+  <p id="message"></p>
+
+  <hr>
+
+  <h2>Documentation</h2>
+
+  <p>
+    Consultez le README GitHub pour la documentation API.
+  </p>
+
+  <script>
+
+    document
+      .getElementById("loginForm")
+      .addEventListener("submit", async (e) => {
+
+        e.preventDefault();
+
+        const email =
+          document.getElementById("email").value;
+
+        const password =
+          document.getElementById("password").value;
+
+        const response = await fetch(
+          "/auth/login",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+              email,
+              password
+            })
+          }
+        );
+
+        const data = await response.json();
+
+        if (response.ok) {
+
+          window.location.href =
+            "/dashboard.html";
+
+        } else {
+
+          document
+            .getElementById("message")
+            .innerText = data.message;
+        }
+      });
+
+  </script>
+
+</body>
+</html>

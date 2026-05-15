@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Gestion Catways</title>
+</head>
+
+<body>
+
+  <h1>Gestion des Catways</h1>
+
+  <a href="/dashboard.html">
+    Retour dashboard
+  </a>
+
+  <hr>
+
+  <h2>Ajouter un catway</h2>
+
+  <form id="catwayForm">
+
+    <input
+      type="number"
+      id="catwayNumber"
+      placeholder="Numéro"
+      required
+    >
+
+    <br><br>
+
+    <select id="catwayType">
+
+      <option value="long">
+        long
+      </option>
+
+      <option value="short">
+        short
+      </option>
+
+    </select>
+
+    <br><br>
+
+    <input
+      type="text"
+      id="catwayState"
+      placeholder="État"
+      required
+    >
+
+    <br><br>
+
+    <button type="submit">
+      Ajouter
+    </button>
+
+  </form>
+
+  <hr>
+
+  <h2>Liste des catways</h2>
+
+  <ul id="catwayList"></ul>
+
+  <script>
+
+    async function loadCatways() {
+
+      const response = await fetch("/catways");
+
+      const catways = await response.json();
+
+      const list =
+        document.getElementById("catwayList");
+
+      list.innerHTML = "";
+
+      catways.forEach((catway) => {
+
+        list.innerHTML += `
+          <li>
+            Catway ${catway.catwayNumber}
+            -
+            ${catway.catwayType}
+            -
+            ${catway.catwayState}
+          </li>
+        `;
+      });
+    }
+
+    document
+      .getElementById("catwayForm")
+      .addEventListener("submit", async (e) => {
+
+        e.preventDefault();
+
+        const catwayNumber =
+          document.getElementById("catwayNumber").value;
+
+        const catwayType =
+          document.getElementById("catwayType").value;
+
+        const catwayState =
+          document.getElementById("catwayState").value;
+
+        await fetch("/catways", {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            catwayNumber,
+            catwayType,
+            catwayState
+          })
+        });
+
+        loadCatways();
+      });
+
+    loadCatways();
+
+  </script>
+
+</body>
+</html>
